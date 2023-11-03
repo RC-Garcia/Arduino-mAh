@@ -1,0 +1,31 @@
+#include <Adafruit_INA219.h>
+
+Adafruit_INA219 ina219;
+
+void setup(void) {
+  Serial.begin(115200);
+
+  if (!ina219.begin()) {
+    Serial.println("Failed to find INA219 chip");
+    while (1);
+  }
+
+  ina219.setCalibration_16V_400mA();
+}
+
+void loop(void) {
+  float shuntVoltage = ina219.getShuntVoltage_mV();
+  float busVoltage = ina219.getBusVoltage_V();
+  float current_mA = ina219.getCurrent_mA();
+  float power_mW = ina219.getPower_mW();
+  float mAh = (current_mA / 1000.0) * (millis() / 3600000.0);
+
+  Serial.print("Bus Voltage: "); Serial.print(busVoltage); Serial.println(" V");
+  Serial.print("Shunt Voltage: "); Serial.print(shuntVoltage); Serial.println(" mV");
+  Serial.print("Current: "); Serial.print(current_mA); Serial.println(" mA");
+  Serial.print("Power: "); Serial.print(power_mW); Serial.println(" mW");
+  Serial.print("mAh: "); Serial.print(mAh); Serial.println(" mAh");
+
+  Serial.println();
+  delay(1000);
+}
